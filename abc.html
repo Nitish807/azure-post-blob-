@@ -1,0 +1,45 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Upload</title>
+</head>
+<body>
+<h1>Upload Image to Azure</h1>
+<input type="file" id="fileInput" />
+ <button id="uploadButton">Upload</button>
+<p id="message"></p>npm install dotenv
+
+ 
+ 
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                document.getElementById('message').innerText = 'Please select a file.';
+                return;
+            }
+ 
+            const formData = new FormData();
+            formData.append('file', file);
+ 
+            try {
+                const response = await fetch('http://localhost:5000/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById('message').innerText = 'Upload successful! URL: ' + result.url;
+                } else {
+                    document.getElementById('message').innerText = 'Upload failed: ' + result.error;
+                }
+            } catch (error) {
+                document.getElementById('message').innerText = 'Error: ' + error.message;
+            }
+        });
+</script>
+</body>
+</html>
